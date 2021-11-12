@@ -24,13 +24,13 @@ imZ = [
 ]
 
 freq = [
-    250,
-    500,
-    1000,
-    10000,
-    100000,
-    500000,
-    750000,
+    250.0,
+    500.0,
+    1000.0,
+    10000.0,
+    100000.0,
+    500000.0,
+    750000.0
 ]
 
 phaseZ =[]
@@ -40,12 +40,18 @@ for i in range(7):
     polarZ = (cmath.polar(Z))
     normZ.append(polarZ[0])
     phaseZ.append(polarZ[1])
-print(phaseZ)
+print(normZ)
 print(freq)
 
 
+plt.xlabel('LOG($\omega$)')
+plt.ylabel('LOG(|Z|)')
 plt.loglog(freq, normZ)
 plt.show()
+
+
+plt.xlabel('LOG($\omega$)')
+plt.ylabel('$\phi_Z$')
 plt.semilogx(freq, phaseZ)
 plt.ylim(0, cmath.pi)
 plt.show()
