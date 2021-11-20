@@ -31,16 +31,18 @@ Ztheory = np.array([
     [1.41471, -89.9189]
 ])
 ImpNorm = Ztheory[:, 0]
-ImpPhase = Ztheory[:, 1]
+ImpPha = Ztheory[:, 1]
+ImpPhase = [x * cmath.pi/180 for x in ImpPha]
 Impedence = [cmath.rect(ImpNorm[i], ImpPhase[i]) for i in range(10)]
 ImpReal = [i.real for i in Impedence]
 ImpImag = [i.imag for i in Impedence]
 
 freq = table[:,0]
 R = table[:, 1]
-phi = table[:, 2]
-U_0 = table[:,3]
-V_0 = table[:,4]
+phideg = table[:, 2]
+phi = [x * (cmath.pi/180) for x in phideg]
+U_0 = table[:,3] /2
+V_0 = table[:,4] /2
 
 
 def FindZ(U, V, phi, Res):
@@ -57,13 +59,13 @@ def Findphase(z):
     phase = polarz[1]
     return phase
 
-Z = [FindZ(U_0[x], V_0[x], phi[x], 1000) for x in range(10)]
+Z = [FindZ(U_0[x], V_0[x], phi[x], R[x]) for x in range(10)]
 normz = [Findnorm(x) for x in Z]
 phasez = [Findphase(x) for x in Z]
 realZ = [x.real for x in Z]
 imZ = [x.imag for x in Z]
 
-
+print(phasez)
 plt.title('$|Z| vs. \omega$')
 plt.xlabel('$\log(\omega)$')
 plt.ylabel('$\log(|Z|)$')
@@ -74,7 +76,7 @@ plt.show()
 plt.title('$\phi_Z$ vs. $\omega$')
 plt.xlabel('$\log(\omega)$')
 plt.ylabel('$\phi_Z$')
-plt.semilogx(freq, Ztheory[:, 1], '*-')
+plt.semilogx(freq, ImpPhase, '*-')
 plt.semilogx(freq, phasez, 'o-')
 plt.show()
 
