@@ -41,11 +41,15 @@ def Findphase(z):
     phase = polarz[1]
     return phase
 
+def unCertainty(theory, experiment):
+    error = ((theory - experiment)/ theory)*100
+    return error
+
 resistor = 10000
 t=0.000120
 C = t/resistor
 
-omegaTheory = np.logspace(1,7)
+omegaTheory = np.logspace(1,7,10)
 Impedence = resistor * (1 /(1 + (1j * omegaTheory*t)))
 ImpNorm = [Findnorm(x) for x in Impedence]
 ImpPhase = [Findphase(x) for x in Impedence]
@@ -70,10 +74,18 @@ Gphase = [Findphase(x) for x in G]
 Greal = [x.real for x in G]
 GIm = [x.imag for x in G]
 
-print(Z)
-print(G)
+
+ImpedenceForError = [resistor * (1 /(1 + (1j * omega[x]*t))) for x in range(10)]
+ModulusForError = [1j * omega[x] * ImpedenceForError[x] for x in range(10)]
+Zerror = [unCertainty(ImpedenceForError[x], Z[x]) for x in range(10)]
+Gerror = [unCertainty(ModulusForError[x], G[x]) for x in range(10)]
+Zerror = [Findnorm(x) for x in Zerror]
+Gerror = [Findnorm(x) for x in Gerror]
+print(Zerror)
+print(Gerror)
 
 
+'''
 plt.title('$|Z| vs. \omega$')
 plt.xlabel('$\log(\omega)$')
 plt.ylabel('$|Z|$')
@@ -132,3 +144,4 @@ plt.ylabel('$Im(G)$')
 plt.semilogx(omegaTheory, GImTheory)
 plt.semilogx(omega, GIm,'o')
 plt.show()
+'''
